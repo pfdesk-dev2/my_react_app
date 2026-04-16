@@ -1,121 +1,115 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useState } from "react";
+import { ALL_LABELS } from "./constants/navigation";
+import C from "./constants/colors";
 
+// Onboarding screens
+import Welcome from "./screens/onboarding/Welcome";
+import Login from "./screens/onboarding/Login";
+import LoginOTP from "./screens/onboarding/LoginOTP";
+import Consent from "./screens/onboarding/Consent";
+import AadhaarVerify from "./screens/onboarding/AadhaarVerify";
+import AadhaarOTP from "./screens/onboarding/AadhaarOTP";
+import PANVerify from "./screens/onboarding/PANVerify";
+import DocsOK from "./screens/onboarding/DocsOK";
+import Fetching from "./screens/onboarding/Fetching";
+import Discovery from "./screens/onboarding/Discovery";
+
+// App screens
+import Dashboard from "./screens/app/Dashboard";
+import Health from "./screens/app/Health";
+import Calculator from "./screens/app/Calculator";
+import Actions from "./screens/app/Actions";
+import Tracker from "./screens/app/Tracker";
+import Advisor from "./screens/app/Advisor";
+import Settings from "./screens/app/Settings";
+
+// ─────────────────────────────────────────────────────
+// App — top-level screen router using a simple screen ID string
+// All navigation is done via go(screenId) or onNav(screenId)
+// ─────────────────────────────────────────────────────
 function App() {
-  const [count, setCount] = useState(0)
+  const [screen, setScreen] = useState("welcome");
+
+  // go() is used for sequential onboarding navigation
+  // onNav() is used for sidebar navigation in the main app
+  const go = (id) => setScreen(id);
+  const onNav = (id) => setScreen(id);
+
+  const renderScreen = () => {
+    switch (screen) {
+      // ── Onboarding flow ──────────────────────────────
+      case "welcome":       return <Welcome go={go} />;
+      case "login":         return <Login go={go} />;
+      case "login_otp":     return <LoginOTP go={go} />;
+      case "consent":       return <Consent go={go} />;
+      case "aadhaar_verify":return <AadhaarVerify go={go} />;
+      case "aadhaar_otp":   return <AadhaarOTP go={go} />;
+      case "pan_verify":    return <PANVerify go={go} />;
+      case "docs_ok":       return <DocsOK go={go} />;
+      case "fetching":      return <Fetching go={go} />;
+      case "discovery":     return <Discovery go={go} />;
+
+      // ── Main app ─────────────────────────────────────
+      case "dashboard":     return <Dashboard go={go} onNav={onNav} />;
+      case "health":        return <Health go={go} onNav={onNav} />;
+      case "calculator":    return <Calculator go={go} onNav={onNav} />;
+      case "actions":       return <Actions go={go} onNav={onNav} />;
+      case "tracker":       return <Tracker go={go} onNav={onNav} />;
+      case "advisor":       return <Advisor go={go} onNav={onNav} />;
+      case "settings":      return <Settings go={go} onNav={onNav} />;
+
+      default:              return <Welcome go={go} />;
+    }
+  };
 
   return (
     <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started 4.0</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
+      {renderScreen()}
+
+      {/* ── Dev-only screen switcher (remove before production) ── */}
+      {import.meta.env.DEV && (
+        <div
+          style={{
+            position: "fixed",
+            bottom: 12,
+            left: "50%",
+            transform: "translateX(-50%)",
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 6,
+            padding: "8px 12px",
+            borderRadius: 12,
+            background: "rgba(10,22,40,0.88)",
+            backdropFilter: "blur(8px)",
+            zIndex: 9999,
+            maxWidth: "calc(100vw - 24px)",
+            justifyContent: "center",
+          }}
         >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+          {Object.entries(ALL_LABELS).map(([id, label]) => (
+            <button
+              key={id}
+              onClick={() => setScreen(id)}
+              style={{
+                padding: "4px 10px",
+                borderRadius: 6,
+                border: "none",
+                background: screen === id ? C.gold : "rgba(255,255,255,0.1)",
+                color: screen === id ? C.navy : C.gray400,
+                fontSize: 11,
+                fontWeight: screen === id ? 700 : 400,
+                cursor: "pointer",
+                fontFamily: "monospace",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {label}
+            </button>
+          ))}
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
+      )}
     </>
-  )
+  );
 }
 
-export default App
+export default App;
