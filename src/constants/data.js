@@ -1,6 +1,20 @@
 // Sample PF account data used across Dashboard, Health, Actions, Tracker, and Discovery screens
 export const SAMPLE_ACCOUNTS = [
   {
+    employer: "NTPC Limited",
+    emp: "NTPC LIMITED",
+    mid: "UPDPM00112340000000567",
+    uan: "1012 3456 7890",
+    doj: "10 Aug 2010",
+    doe: "28 May 2015",
+    years: "2010–2015",
+    location: "Noida",
+    status: "Inactive",
+    balance: 312000,
+    bal: 312000,
+    issue: "Nominee not declared",
+  },
+  {
     employer: "Delhi Metro Rail Corporation",
     emp: "DELHI METRO RAIL CORPORATION",   // legacy field kept for compatibility
     mid: "DLCPM00567890000001234",
